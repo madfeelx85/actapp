@@ -6,6 +6,12 @@ app = FastAPI(
     description="API",
     version="1.0.0",
     )
+app.include_router(
+    api_router,
+    prefix=settings.api.prefix,
+)
+
+
 
 if __name__ == "__main__":
     uvicorn.run(
