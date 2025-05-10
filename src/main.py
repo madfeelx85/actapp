@@ -8,4 +8,10 @@ app = FastAPI(
     )
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", reload=True, log_level="debug", host="0.0.0.0", port=8000)
+    uvicorn.run(
+        "main:app",
+        reload=True,
+        log_level="debug",
+        host=settings.run.host,
+        port=settings.run.port,
+    )
