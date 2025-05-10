@@ -12,5 +12,6 @@ class ApiPrefix(BaseModel):
 
 class Settings(BaseSettings):
     run: RunConfig = RunConfig()
+    api: ApiPrefix = ApiPrefix()
 
 settings = Settings()
