@@ -8,3 +8,8 @@ uvicorn = {extras = ["standard"], version = "^0.34.2"}
 pydantic-settings = "^2.9.1"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.40"}
 asyncpg = "^0.30.0"
+alembic = "^1.15.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+
