@@ -9,7 +9,7 @@ from core.dependencies.db import get_db_session
 from crud.template import TemplateCRUD
 
 router = APIRouter(prefix="/templates", tags=["Templates"])
-UPLOAD_DIR = Path("src/static/templates")
+UPLOAD_DIR = Path("static/templates")
 crud = TemplateCRUD()
 
 @router.post("/", response_model=TemplateRead)
