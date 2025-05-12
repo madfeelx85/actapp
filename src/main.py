@@ -4,7 +4,7 @@ import uvicorn
 import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from starlette.routing import Router
+
 
 from api import router as api_router
 from web.view.index import router as index_router
@@ -21,23 +21,24 @@ async def lifespan(app: FastAPI):
     await db_helper.dispose()
 
 
-app = FastAPI(
+main_app = FastAPI(
     lifespan=lifespan,
 
 )
+main_app.mount("/static", StaticFiles(directory="static"), name="static")
 
-app.include_router(
+main_app.include_router(
     api_router,
 )
 
-app.include_router(
+main_app.include_router(
     index_router,
 )
-app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 if __name__ == "__main__":
     uvicorn.run(
-        "main:app",
+        "main:main_app",
         log_level="debug",
         reload=True,
         host=settings.run.host,
