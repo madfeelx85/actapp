@@ -3,6 +3,7 @@ from sqlalchemy import select
 from core.models.template import Template
 from core.schemas.template import TemplateCreate, TemplateUpdate
 
+
 class TemplateCRUD:
     async def get(self, db: AsyncSession, id: int) -> Template | None:
         result = await db.execute(select(Template).where(Template.id == id))
@@ -19,7 +20,9 @@ class TemplateCRUD:
         await db.refresh(obj)
         return obj
 
-    async def update(self, db: AsyncSession, db_obj: Template, update_in: TemplateUpdate) -> Template:
+    async def update(
+        self, db: AsyncSession, db_obj: Template, update_in: TemplateUpdate
+    ) -> Template:
         for field, value in update_in.dict(exclude_unset=True).items():
             setattr(db_obj, field, value)
         await db.commit()

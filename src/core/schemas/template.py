@@ -10,11 +10,14 @@ class TemplateBase(BaseModel):
     path: str = Field(..., max_length=500)
     type: TemplateType
 
+
 class TemplateCreate(TemplateBase):
     pass
 
+
 class TemplateUpdate(TemplateBase):
     pass
+
 
 class TemplateRead(TemplateBase):
     id: int
