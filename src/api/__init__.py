@@ -5,4 +5,4 @@ from core.config import settings
 from .build_object import router as build_object_router
 
 router = APIRouter(prefix=settings.api.prefix)
-router.include_router(build_object_router, tags=["build_object"])
+router.include_router(build_object_router)

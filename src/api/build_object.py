@@ -8,7 +8,7 @@ from core.schemas.build_object import (
 from core.dependencies.db import get_db_session
 from crud.build_object import BuildObjectCRUD
 
-router = APIRouter(prefix="/build_objects", tags=["Build Objects"])
+router = APIRouter(prefix="/build", tags=["Build Objects"])
 crud = BuildObjectCRUD()
 
 
