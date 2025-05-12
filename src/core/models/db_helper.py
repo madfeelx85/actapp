@@ -40,6 +40,7 @@ class DatabaseHelper:
         async with self.session_factory() as session:
             yield session
 
+
 db_helper = DatabaseHelper(
     url=str(settings.db.url),
     echo=settings.db.echo,

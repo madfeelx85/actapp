@@ -3,6 +3,7 @@ from sqlalchemy import select
 from core.models.build_object import BuildObject
 from core.schemas.build_object import BuildObjectCreate, BuildObjectUpdate
 
+
 class BuildObjectCRUD:
     async def get(self, db: AsyncSession, id: int) -> BuildObject | None:
         result = await db.execute(select(BuildObject).where(BuildObject.id == id))
@@ -19,7 +20,9 @@ class BuildObjectCRUD:
         await db.refresh(obj)
         return obj
 
-    async def update(self, db: AsyncSession, db_obj: BuildObject, update_in: BuildObjectUpdate) -> BuildObject:
+    async def update(
+        self, db: AsyncSession, db_obj: BuildObject, update_in: BuildObjectUpdate
+    ) -> BuildObject:
         for field, value in update_in.dict(exclude_unset=True).items():
             setattr(db_obj, field, value)
         await db.commit()

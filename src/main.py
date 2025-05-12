@@ -12,22 +12,23 @@ from core.models import db_helper
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    #startup
+    # startup
     yield
-    #shutdown
+    # shutdown
     await db_helper.dispose()
+
+
 main_app = FastAPI(
     title="API",
     description="API",
     version="1.0.0",
     default_response_class=ORJSONResponse,
     lifespan=lifespan,
-    )
+)
 main_app.include_router(
     api_router,
     prefix=settings.api.prefix,
 )
-
 
 
 if __name__ == "__main__":
