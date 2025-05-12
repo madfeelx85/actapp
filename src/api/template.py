@@ -4,9 +4,13 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Form, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.enums.template_type import TemplateType
 from core.schemas.template import TemplateCreate, TemplateRead, TemplateUpdate
 from core.dependencies.db import get_db_session
 from crud.template import TemplateCRUD
+from utils.template_parser import extract_fields_from_excel
+
 
 router = APIRouter(prefix="/templates", tags=["Templates"])
 UPLOAD_DIR = Path("static/templates")
