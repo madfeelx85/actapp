@@ -21,3 +21,4 @@ class TemplateUpdate(TemplateBase):
 
 class TemplateRead(TemplateBase):
     id: int
+    fields: list[str] = Field(default_factory=list)
