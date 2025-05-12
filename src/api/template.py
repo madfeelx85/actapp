@@ -13,7 +13,7 @@ from utils.template_parser import extract_fields_from_excel
 
 
 router = APIRouter(prefix="/templates", tags=["Templates"])
-UPLOAD_DIR = Path("static/templates")
+UPLOAD_DIR = Path("output/templates")
 crud = TemplateCRUD()
 
 
