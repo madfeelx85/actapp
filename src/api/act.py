@@ -35,3 +35,8 @@ async def delete_act(act_id: int, db: AsyncSession = Depends(get_db_session)):
     if not act:
         raise HTTPException(404, detail="Act not found")
     await crud.delete(db, act)
+
+@router.get("/by_object/{build_object_id}", response_model=list[ActRead])
+async def get_acts_by_object(build_object_id: int, db: AsyncSession = Depends(get_db_session)):
+    return await crud.get_by_object_id(db, build_object_id)
+

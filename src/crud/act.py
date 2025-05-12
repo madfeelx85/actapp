@@ -1,5 +1,7 @@
+from typing import Any, Coroutine, Sequence
+
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, Row, RowMapping
 from core.models.act import Act
 from core.schemas.act import ActCreate, ActUpdate
 
@@ -30,3 +32,9 @@ class ActCRUD:
     async def delete(self, db: AsyncSession, db_obj: Act) -> None:
         await db.delete(db_obj)
         await db.commit()
+
+    async def get_by_object_id(self, db: AsyncSession, build_object_id: int) -> Sequence[Act]:
+        result = await db.execute(
+            select(Act).where(Act.build_object_id == build_object_id)
+        )
+        return result.scalars().all()
