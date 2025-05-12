@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Строительные объекты{% endblock %}
+
+{% block content %}
+  <h1 class="text-2xl font-semibold mb-4">Объекты строительства</h1>
+
+  {% if objects %}
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {% for obj in objects %}
+        <div class="bg-gray-800 rounded-lg p-4 shadow-md">
+          <h2 class="text-xl font-bold mb-2">{{ obj.name }}</h2>
+          <p class="text-sm text-gray-300 mb-4">{{ obj.description }}</p>
+          <a href="/objects/{{ obj.id }}/acts" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-sm">Акты</a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-gray-400">Пока нет добавленных объектов.</p>
+  {% endif %}
+{% endblock %}
