@@ -9,6 +9,7 @@ class TemplateBase(BaseModel):
     description: str | None = Field(default=None, max_length=500)
     path: str = Field(..., max_length=500)
     type: TemplateType
+    fields: list[str] = Field(default_factory=list)
 
 
 class TemplateCreate(TemplateBase):
