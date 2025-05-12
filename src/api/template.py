@@ -61,27 +61,27 @@ async def delete_template(template_id: int, db: AsyncSession = Depends(get_db_se
 async def upload_template_file(
     name: str = Form(...),
     description: str | None = Form(None),
-    type: str = Form(...),  # "hidden_work" или "commissioning"
+    type: TemplateType = Form(...),
     file: UploadFile = File(...),
     db: AsyncSession = Depends(get_db_session),
 ):
-    # Проверка расширения
     if not file.filename.lower().endswith((".xlsx", ".xls")):
-        raise HTTPException(
-            status_code=400, detail="Файл должен быть Excel (.xlsx или .xls)"
-        )
+        raise HTTPException(status_code=400, detail="Файл должен быть Excel (.xlsx или .xls)")
 
-    # Создаём уникальное имя
     filename = f"{uuid4().hex}_{file.filename}"
     file_path = UPLOAD_DIR / filename
-
-    # Сохраняем файл на диск
     os.makedirs(UPLOAD_DIR, exist_ok=True)
     with open(file_path, "wb") as f:
-        content = await file.read()
-        f.write(content)
+        f.write(await file.read())
 
-    # Создаём Template
+    # 🧠 ПАРСИМ ПОЛЯ
+    try:
+        fields = extract_fields_from_excel(file_path)
+        print(f"[TEMPLATE UPLOAD] Найдены поля: {fields}")  # <-- вот лог
+    except Exception as e:
+        raise HTTPException(400, detail=f"Ошибка чтения шаблона: {str(e)}")
+
+    # СОХРАНЯЕМ шаблон
     new_template = await crud.create(
         db,
         obj_in=TemplateCreate(
@@ -89,7 +89,10 @@ async def upload_template_file(
             description=description,
             path=str(file_path),
             type=type,
+            fields=fields,
         ),
     )
 
+    print(f"[TEMPLATE UPLOAD] Шаблон успешно сохранён: {new_template.id}")
     return new_template
+
