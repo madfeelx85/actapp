@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 
 import uvicorn
-import os
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
@@ -10,7 +10,6 @@ from api import router as api_router
 from web.view.index import router as index_router
 from core.config import settings
 from core.models import db_helper
-
 
 
 @asynccontextmanager
@@ -23,7 +22,6 @@ async def lifespan(app: FastAPI):
 
 main_app = FastAPI(
     lifespan=lifespan,
-
 )
 main_app.mount("/static", StaticFiles(directory="static"), name="static")
 

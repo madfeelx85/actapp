@@ -33,7 +33,9 @@ class ActCRUD:
         await db.delete(db_obj)
         await db.commit()
 
-    async def get_by_object_id(self, db: AsyncSession, build_object_id: int) -> Sequence[Act]:
+    async def get_by_object_id(
+        self, db: AsyncSession, build_object_id: int
+    ) -> Sequence[Act]:
         result = await db.execute(
             select(Act).where(Act.build_object_id == build_object_id)
         )

@@ -66,7 +66,9 @@ async def upload_template_file(
     db: AsyncSession = Depends(get_db_session),
 ):
     if not file.filename.lower().endswith((".xlsx", ".xls")):
-        raise HTTPException(status_code=400, detail="Файл должен быть Excel (.xlsx или .xls)")
+        raise HTTPException(
+            status_code=400, detail="Файл должен быть Excel (.xlsx или .xls)"
+        )
 
     filename = f"{uuid4().hex}_{file.filename}"
     file_path = UPLOAD_DIR / filename
@@ -95,4 +97,3 @@ async def upload_template_file(
 
     print(f"[TEMPLATE UPLOAD] Шаблон успешно сохранён: {new_template.id}")
     return new_template
-
