@@ -18,10 +18,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/acts/create", response_class=HTMLResponse)
-async def create_act_page(
-    request: Request,
-    db: AsyncSession = Depends(get_db_session)
-):
+async def create_act_page(request: Request, db: AsyncSession = Depends(get_db_session)):
     # Получаем все шаблоны и объекты строительства
     templates_result = await db.execute(select(Template))
     templates_list = templates_result.scalars().all()
@@ -34,15 +31,16 @@ async def create_act_page(
         {
             "request": request,
             "templates": templates_list,
-            "build_objects": build_objects_list
-        }
+            "build_objects": build_objects_list,
+        },
     )
+
 
 @router.get("/acts/form", response_class=HTMLResponse)
 async def get_act_dynamic_form(
     request: Request,
     template_id: int = Query(...),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ):
     template = await db.get(Template, template_id)
     if not template:
@@ -56,8 +54,9 @@ async def get_act_dynamic_form(
         {
             "request": request,
             "fields": fields,
-        }
+        },
     )
+
 
 @router.post("/acts/create", response_class=HTMLResponse)
 async def create_act_from_form(
@@ -70,7 +69,9 @@ async def create_act_from_form(
     # Извлекаем служебные поля
     build_object_id = int(form_data.pop("build_object_id"))
     template_id = int(form_data.pop("template_id"))
-    name = form_data.pop("name", f"Акт от {datetime.now(timezone.utc).strftime('%Y-%m-%d')}")
+    name = form_data.pop(
+        "name", f"Акт от {datetime.now(timezone.utc).strftime('%Y-%m-%d')}"
+    )
     description = form_data.pop("description", "")
 
     # Остальное — пользовательские данные
@@ -81,11 +82,9 @@ async def create_act_from_form(
         description=description,
         build_object_id=build_object_id,
         template_id=template_id,
-        data=data
+        data=data,
     )
     db.add(new_act)
     await db.commit()
 
     return RedirectResponse(url=f"/objects/{build_object_id}/acts", status_code=303)
-
-

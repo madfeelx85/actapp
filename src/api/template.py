@@ -56,5 +56,3 @@ async def delete_template(template_id: int, db: AsyncSession = Depends(get_db_se
     if not obj:
         raise HTTPException(404, detail="Template not found")
     await crud.delete(db, obj)
-
-

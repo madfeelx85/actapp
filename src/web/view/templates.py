@@ -21,23 +21,24 @@ templates = Jinja2Templates(directory="templates")
 UPLOAD_DIR = Path("output/templates")
 crud = TemplateCRUD()
 
+
 @router.get("/", response_class=HTMLResponse)
 async def template_list(request: Request, db: AsyncSession = Depends(get_db_session)):
     result = await db.execute(select(Template))
     templates_list = result.scalars().all()
 
     return templates.TemplateResponse(
-        "templates_list.html",
-        {"request": request, "templates": templates_list}
+        "templates_list.html", {"request": request, "templates": templates_list}
     )
+
 
 @router.get("/upload-form")
 async def upload_template_form(request: Request):
     return templates.TemplateResponse(
         "template_upload_form.html",
-        {"request": request,
-        "template_types": list(TemplateType)},
+        {"request": request, "template_types": list(TemplateType)},
     )
+
 
 @router.post("/upload")
 async def upload_template_file(

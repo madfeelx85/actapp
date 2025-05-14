@@ -11,7 +11,6 @@ from core.models.build_object import BuildObject
 from utils.data_expander import expand_data_for_template
 
 
-
 class ActDocumentGenerator:
     def __init__(self, act: Act, build_object: BuildObject):
         self.act = act
@@ -26,7 +25,11 @@ class ActDocumentGenerator:
 
         for row in sheet.iter_rows():
             for cell in row:
-                if isinstance(cell.value, str) and "{{" in cell.value and "}}" in cell.value:
+                if (
+                    isinstance(cell.value, str)
+                    and "{{" in cell.value
+                    and "}}" in cell.value
+                ):
                     for key, value in expanded_data.items():
                         placeholder = f"{{{{ {key} }}}}"
                         if placeholder in cell.value:
@@ -39,7 +42,7 @@ class ActDocumentGenerator:
 
         output_dir = Path("output") / self.build_object.name
         output_dir.mkdir(parents=True, exist_ok=True)
-        timestamp = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
+        timestamp = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
         act_number = self.act.data.get("act_number", "Не указано")
         filename = f"{self.act.name} №{act_number} от {timestamp}.xlsx"
         output_path = output_dir / filename

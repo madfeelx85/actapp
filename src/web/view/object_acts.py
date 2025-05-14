@@ -14,9 +14,7 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get("/objects/{build_object_id}/acts", response_class=HTMLResponse)
 async def object_acts_page(
-    request: Request,
-    build_object_id: int,
-    db: AsyncSession = Depends(get_db_session)
+    request: Request, build_object_id: int, db: AsyncSession = Depends(get_db_session)
 ):
     build_object = await db.get(BuildObject, build_object_id)
     if not build_object:
@@ -27,5 +25,5 @@ async def object_acts_page(
 
     return templates.TemplateResponse(
         "object_acts_page.html",
-        {"request": request, "build_object": build_object, "acts": acts}
+        {"request": request, "build_object": build_object, "acts": acts},
     )
