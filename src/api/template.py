@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Form, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.responses import RedirectResponse
 
 from core.enums.template_type import TemplateType
 from core.schemas.template import TemplateCreate, TemplateRead, TemplateUpdate
@@ -57,43 +58,3 @@ async def delete_template(template_id: int, db: AsyncSession = Depends(get_db_se
     await crud.delete(db, obj)
 
 
-@router.post("/upload", response_model=TemplateRead)
-async def upload_template_file(
-    name: str = Form(...),
-    description: str | None = Form(None),
-    type: TemplateType = Form(...),
-    file: UploadFile = File(...),
-    db: AsyncSession = Depends(get_db_session),
-):
-    if not file.filename.lower().endswith((".xlsx", ".xls")):
-        raise HTTPException(
-            status_code=400, detail="Файл должен быть Excel (.xlsx или .xls)"
-        )
-
-    filename = f"{uuid4().hex}_{file.filename}"
-    file_path = UPLOAD_DIR / filename
-    os.makedirs(UPLOAD_DIR, exist_ok=True)
-    with open(file_path, "wb") as f:
-        f.write(await file.read())
-
-    # 🧠 ПАРСИМ ПОЛЯ
-    try:
-        fields = extract_fields_from_excel(file_path)
-        print(f"[TEMPLATE UPLOAD] Найдены поля: {fields}")  # <-- вот лог
-    except Exception as e:
-        raise HTTPException(400, detail=f"Ошибка чтения шаблона: {str(e)}")
-
-    # СОХРАНЯЕМ шаблон
-    new_template = await crud.create(
-        db,
-        obj_in=TemplateCreate(
-            name=name,
-            description=description,
-            path=str(file_path),
-            type=type,
-            fields=fields,
-        ),
-    )
-
-    print(f"[TEMPLATE UPLOAD] Шаблон успешно сохранён: {new_template.id}")
-    return new_template
