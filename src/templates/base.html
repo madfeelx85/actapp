@@ -4,10 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}ActApp{% endblock %}</title>
-<link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+  <!--  Подключение TailwindCSS через CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
+  <!--  Включение тёмной темы -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+  </script>
 </head>
-<body class="bg-gray-900 text-white font-sans">
+<body class="bg-gray-900 text-white font-sans min-h-screen">
+
   <div class="container mx-auto p-6">
     {% block content %}{% endblock %}
   </div>
