@@ -1,0 +1,26 @@
+<form
+  hx-post="/acts/create"
+  method="post"
+  hx-target="body"
+  hx-swap="outerHTML"
+  class="space-y-4 bg-gray-800 p-4 rounded-lg mt-4"
+>
+  <input type="hidden" name="build_object_id" value="{{ build_object_id }}">
+  <input type="hidden" name="template_id" value="{{ template.id }}">
+
+  {% for field in template.fields %}
+  <div>
+    <label class="block text-sm mb-1">{{ field }}</label>
+    <input
+      type="text"
+      name="{{ field }}"
+      class="w-full rounded px-3 py-2 bg-gray-700 text-white border border-gray-600"
+      required
+    >
+  </div>
+  {% endfor %}
+
+  <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+    Сохранить акт
+  </button>
+</form>
