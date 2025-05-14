@@ -4,21 +4,53 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}ActApp{% endblock %}</title>
-  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
-  <!--  Подключение TailwindCSS через CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
 
-  <!--  Включение тёмной темы -->
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class'
     };
   </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    window.onload = () => {
+      lucide.createIcons();
+    };
+  </script>
 </head>
 <body class="bg-gray-900 text-white font-sans min-h-screen">
 
-  <div class="container mx-auto p-6">
-    {% block content %}{% endblock %}
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="group flex flex-col bg-gray-800 text-white w-[60px] hover:w-[200px] transition-all duration-300">
+      <a href="/" class="flex items-center gap-4 px-4 py-3 hover:bg-gray-700">
+        <i data-lucide="home" class="w-6 h-6"></i>
+        <span class="hidden group-hover:inline">Объекты</span>
+      </a>
+      <a href="/templates" class="flex items-center gap-4 px-4 py-3 hover:bg-gray-700">
+        <i data-lucide="file-spreadsheet" class="w-6 h-6"></i>
+        <span class="hidden group-hover:inline">Шаблоны</span>
+      </a>
+      <a href="/acts/create" class="flex items-center gap-4 px-4 py-3 hover:bg-gray-700">
+        <i data-lucide="file-plus" class="w-6 h-6"></i>
+        <span class="hidden group-hover:inline">Создать акт</span>
+      </a>
+      <a href="/templates/upload-form" class="flex items-center gap-4 px-4 py-3 hover:bg-gray-700">
+        <i data-lucide="upload" class="w-6 h-6"></i>
+        <span class="hidden group-hover:inline">Загрузить шаблон</span>
+      </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-auto bg-gray-900">
+      {% block content %}{% endblock %}
+    </main>
   </div>
 
 </body>
