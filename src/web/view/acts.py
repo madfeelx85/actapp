@@ -4,15 +4,14 @@ from fastapi import APIRouter, Request, Depends, Query, HTTPException, Form
 from fastapi.responses import HTMLResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from starlette.responses import RedirectResponse
+from starlette.responses import RedirectResponse, FileResponse
 from starlette.templating import Jinja2Templates
 
 from core.dependencies.db import get_db_session
 from core.models.act import Act
 from core.models.template import Template
 from core.models.build_object import BuildObject
-
-from utils.template_parser import extract_fields_from_excel
+from utils.doc_generator import ActDocumentGenerator
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -88,3 +87,5 @@ async def create_act_from_form(
     await db.commit()
 
     return RedirectResponse(url=f"/objects/{build_object_id}/acts", status_code=303)
+
+
