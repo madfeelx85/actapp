@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Генерация акта{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Выберите акт для генерации</h1>
+
+{% if acts %}
+  <ul class="space-y-2">
+    {% for act in acts %}
+    <li class="flex justify-between items-center bg-gray-800 p-4 rounded">
+      <div>
+        <div class="font-semibold">{{ act.name }}</div>
+        <div class="text-gray-400 text-sm">{{ act.created_at.strftime('%d.%m.%Y') }}</div>
+      </div>
+      <a href="/generate/{{ act.id }}"
+         class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+        Сгенерировать
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="text-gray-400">Нет доступных актов для генерации.</p>
+{% endif %}
+{% endblock %}
