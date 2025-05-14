@@ -1,42 +1,73 @@
-import re
 from pathlib import Path
+from io import BytesIO
 from datetime import datetime
-from openpyxl import load_workbook
-from shutil import copyfile
+from loguru import logger
+import win32com.client as win32
 
+from openpyxl import load_workbook
+
+from core.models.act import Act
+from core.models.build_object import BuildObject
 from utils.data_expander import expand_data_for_template
 
 
+
 class ActDocumentGenerator:
-    def __init__(self, act, template, output_dir="output"):
+    def __init__(self, act: Act, build_object: BuildObject):
         self.act = act
-        self.template = template
-        self.output_dir = Path(output_dir)
-        self.timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        self.build_object = build_object
+        self.template_path = Path(self.act.template.path)
 
-    def expand_data(self):
-        return expand_data_for_template(self.act.data)
+    def _fill_template(self):
+        workbook = load_workbook(self.template_path)
+        sheet = workbook.active
 
-    def fill_template(self, expanded_data: dict, template_path: Path, output_path: Path):
-        wb = load_workbook(template_path)
-        for ws in wb.worksheets:
-            for row in ws.iter_rows():
-                for cell in row:
-                    if isinstance(cell.value, str):
-                        matches = re.findall(r"\{\{\s*(\w+)\s*\}\}", cell.value)
-                        for match in matches:
-                            if match in expanded_data:
-                                cell.value = cell.value.replace(f"{{{{ {match} }}}}", str(expanded_data[match]))
-        wb.save(output_path)
+        expanded_data = expand_data_for_template(self.act.data)
 
-    def generate(self):
-        object_dir = self.output_dir / self.act.build_object.name
-        object_dir.mkdir(parents=True, exist_ok=True)
+        for row in sheet.iter_rows():
+            for cell in row:
+                if isinstance(cell.value, str) and "{{" in cell.value and "}}" in cell.value:
+                    for key, value in expanded_data.items():
+                        placeholder = f"{{{{ {key} }}}}"
+                        if placeholder in cell.value:
+                            cell.value = cell.value.replace(placeholder, str(value))
 
-        output_filename = f"{self.act.name} от {self.timestamp}.xlsx"
-        output_path = object_dir / output_filename
+        return workbook
 
-        expanded_data = self.expand_data()
-        self.fill_template(Path(self.template.path), output_path)
+    def save_to_file(self) -> Path:
+        workbook = self._fill_template()
+
+        output_dir = Path("output") / self.build_object.name
+        output_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
+        act_number = self.act.data.get("act_number", "Не указано")
+        filename = f"{self.act.name} №{act_number} от {timestamp}.xlsx"
+        output_path = output_dir / filename
+
+        workbook.save(output_path)
+        pdf_path = self.convert_to_pdf(output_path)
+        logger.info(f"[GENERATE] PDF saved to {pdf_path}")
 
         return output_path
+
+    def get_as_bytes(self) -> BytesIO:
+        workbook = self._fill_template()
+        stream = BytesIO()
+        workbook.save(stream)
+        stream.seek(0)
+        return stream
+
+    def convert_to_pdf(self, excel_path: Path) -> Path:
+        pdf_path = excel_path.with_suffix(".pdf")
+
+        excel = win32.gencache.EnsureDispatch("Excel.Application")
+        excel.Visible = False
+
+        wb = excel.Workbooks.Open(str(excel_path.resolve()))
+        try:
+            wb.ExportAsFixedFormat(0, str(pdf_path.resolve()))
+        finally:
+            wb.Close(False)
+            excel.Quit()
+
+        return pdf_path
