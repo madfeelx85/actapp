@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Акты по объекту{% endblock %}
+
+{% block content %}
+  <h1 class="text-3xl font-bold mb-4">Акты для объекта: {{ build_object.name }}</h1>
+  <p class="text-gray-400 mb-6">{{ build_object.description }}</p>
+
+  {% if acts %}
+    <div class="overflow-x-auto">
+      <table id="acts-table" class="min-w-full bg-gray-800 rounded-xl overflow-hidden">
+        <thead class="bg-gray-700 text-white text-left">
+          <tr>
+            <th class="px-6 py-3">ID</th>
+            <th class="px-6 py-3">Название</th>
+            <th class="px-6 py-3">Дата</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-300 divide-y divide-gray-700">
+          {% for act in acts %}
+          <tr class="hover:bg-gray-700 transition">
+            <td class="px-6 py-4">{{ act.id }}</td>
+            <td class="px-6 py-4">{{ act.name }}</td>
+            <td class="px-6 py-4">{{ act.created_at.strftime('%d.%m.%Y') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-gray-400">Акты для этого объекта пока не созданы.</p>
+  {% endif %}
+{% endblock %}
