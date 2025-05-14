@@ -3,15 +3,18 @@
 {% block title %}Строительные объекты{% endblock %}
 
 {% block content %}
-  <h1 class="text-2xl font-semibold mb-4">Объекты строительства</h1>
+  <h1 class="text-3xl font-bold mb-6">Объекты строительства</h1>
 
   {% if objects %}
-    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {% for obj in objects %}
-        <div class="bg-gray-800 rounded-lg p-4 shadow-md">
-          <h2 class="text-xl font-bold mb-2">{{ obj.name }}</h2>
-          <p class="text-sm text-gray-300 mb-4">{{ obj.description }}</p>
-          <a href="/objects/{{ obj.id }}/acts" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-sm">Акты</a>
+        <div class="bg-gray-800 rounded-xl p-6 shadow hover:shadow-lg transition-all">
+          <h2 class="text-xl font-semibold text-white mb-2">{{ obj.name }}</h2>
+          <p class="text-gray-400 mb-4">{{ obj.description }}</p>
+          <a href="/objects/{{ obj.id }}/acts"
+             class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded transition">
+            Смотреть акты
+          </a>
         </div>
       {% endfor %}
     </div>
