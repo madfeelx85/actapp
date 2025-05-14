@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Загрузка шаблона{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-6">Загрузка шаблона акта</h1>
+
+<form action="/templates/upload" method="post" enctype="multipart/form-data" class="space-y-4 bg-gray-800 p-6 rounded-lg">
+  <div>
+    <label class="block mb-1 text-sm">Название шаблона</label>
+    <input type="text" name="name" required class="w-full rounded px-3 py-2 bg-gray-700 border border-gray-600 text-white">
+  </div>
+
+  <div>
+    <label class="block mb-1 text-sm">Описание</label>
+    <textarea name="description" rows="3" class="w-full rounded px-3 py-2 bg-gray-700 border border-gray-600 text-white"></textarea>
+  </div>
+
+  <div>
+  <label class="block mb-1 text-sm">Тип шаблона</label>
+  <select name="type" required class="w-full rounded px-3 py-2 bg-gray-700 border border-gray-600 text-white">
+    {% for t in template_types %}
+      <option value="{{ t.value }}">{{ t.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+
+  <div>
+    <label class="block mb-1 text-sm">Файл шаблона (.xlsx)</label>
+    <input type="file" name="file" accept=".xlsx" required class="text-white">
+  </div>
+
+  <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+    Загрузить шаблон
+  </button>
+</form>
+{% endblock %}
