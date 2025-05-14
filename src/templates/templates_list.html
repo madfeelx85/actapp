@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Шаблоны актов{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Шаблоны актов</h1>
+
+<table class="min-w-full bg-gray-800 rounded-xl overflow-hidden">
+  <thead class="bg-gray-700 text-white text-left">
+    <tr>
+      <th class="px-6 py-3">Название</th>
+      <th class="px-6 py-3">Тип</th>
+      <th class="px-6 py-3">Описание</th>
+      <th class="px-6 py-3">Путь</th>
+      <th class="px-6 py-3">Поля</th>
+    </tr>
+  </thead>
+  <tbody class="text-gray-300 divide-y divide-gray-700">
+    {% for template in templates %}
+    <tr class="hover:bg-gray-700 transition">
+      <td class="px-6 py-4">{{ template.name }}</td>
+      <td class="px-6 py-4">{{ template.type }}</td>
+      <td class="px-6 py-4">{{ template.description }}</td>
+      <td class="px-6 py-4 text-xs">{{ template.path }}</td>
+      <td class="px-6 py-4">
+        <ul class="list-disc list-inside">
+          {% for field in template.fields %}
+          <li>{{ field }}</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
